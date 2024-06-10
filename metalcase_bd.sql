@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2024 a las 00:07:58
+-- Tiempo de generación: 10-06-2024 a las 03:31:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -30,21 +30,21 @@ SET time_zone = "+00:00";
 CREATE TABLE `cliente` (
   `id` int(11) NOT NULL,
   `nombre` text NOT NULL,
-  `telefono` int(11) NOT NULL,
+  `telefono` bigint(20) DEFAULT NULL,
   `email` text NOT NULL,
-  `domicilio` text NOT NULL
+  `direccion` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`id`, `nombre`, `telefono`, `email`, `domicilio`) VALUES
-(1, 'Juan Perez', 2147483647, 'juan.perez@example.com', 'Av. Siempre Viva 123'),
-(2, 'Ana Gomez', 2147483647, 'ana.gomez@example.com', 'Calle Falsa 456'),
-(3, 'Luis Rodriguez', 2147483647, 'luis.rodriguez@example.com', 'Paseo de la Reforma 789'),
-(4, 'Maria Lopez', 2147483647, 'maria.lopez@example.com', 'Insurgentes Sur 1011'),
-(5, 'Carlos Martinez', 2147483647, 'carlos.martinez@example.com', 'Eje Central 1213');
+INSERT INTO `cliente` (`id`, `nombre`, `telefono`, `email`, `direccion`) VALUES
+(1, 'Juan Perez', 3413820859, 'juan.perez@example.com', 'Av. Siempre Viva 123'),
+(2, 'Ana Gomez', 7854698546, 'ana.gomez@example.com', 'Calle Falsa 456'),
+(4, 'Maria Lopez', 7654321098, 'maria.lopez@example.com', 'Insurgentes Sur 1011'),
+(5, 'Carlos Martinez', 3413820858, 'carlos.martinez@example.com', 'Eje Central 1213'),
+(7, 'Amelia Cammarata', 3464632600, 'cammarataamelia@gmail.com', 'Lisandro de la Torre 2611');
 
 -- --------------------------------------------------------
 
@@ -64,11 +64,11 @@ CREATE TABLE `produccion` (
 --
 
 INSERT INTO `produccion` (`id`, `nombreProduccion`, `productoTerminado`, `materiaPrima`) VALUES
-(1, 'Produccion A', 1, 2),
-(2, 'Produccion B', 2, 3),
-(3, 'Produccion C', 3, 4),
-(4, 'Produccion D', 4, 5),
-(5, 'Produccion E', 5, 1);
+(1, 'Produccion A', 3, 1),
+(2, 'Produccion B', 4, 2),
+(3, 'Produccion C', 5, 1),
+(4, 'Produccion D', 5, 4),
+(5, 'Produccion E', 9, 3);
 
 -- --------------------------------------------------------
 
@@ -79,21 +79,22 @@ INSERT INTO `produccion` (`id`, `nombreProduccion`, `productoTerminado`, `materi
 CREATE TABLE `producto` (
   `id` int(11) NOT NULL,
   `nombreProducto` text NOT NULL,
+  `descripcion` text NOT NULL,
   `precio` int(11) NOT NULL,
-  `stock` int(11) NOT NULL,
-  `stockMinimo` int(11) NOT NULL
+  `stock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id`, `nombreProducto`, `precio`, `stock`, `stockMinimo`) VALUES
-(1, 'Producto A', 100, 50, 10),
-(2, 'Producto B', 200, 30, 5),
-(3, 'Producto C', 150, 20, 8),
-(4, 'Producto D', 250, 40, 12),
-(5, 'Producto E', 300, 25, 15);
+INSERT INTO `producto` (`id`, `nombreProducto`, `descripcion`, `precio`, `stock`) VALUES
+(1, 'Metal', '20kg', 100, 50),
+(2, 'Acero', '40kg', 200, -2),
+(3, 'Plancha de metal', '40cm', 150, 20),
+(4, 'Plancha de Acero', '50cm', 250, 40),
+(5, 'Tornillo', '20 Unidades', 300, 25),
+(9, 'Fondo de Heladeras', '30cm x 80cm', 1200, 3);
 
 -- --------------------------------------------------------
 
@@ -104,7 +105,7 @@ INSERT INTO `producto` (`id`, `nombreProducto`, `precio`, `stock`, `stockMinimo`
 CREATE TABLE `proveedor` (
   `id` int(11) NOT NULL,
   `nombreProveedor` text NOT NULL,
-  `telefono` int(11) NOT NULL,
+  `telefono` bigint(11) NOT NULL,
   `nombreProducto` int(11) NOT NULL,
   `productoStock` int(11) NOT NULL,
   `precioProducto` int(11) NOT NULL
@@ -115,7 +116,7 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id`, `nombreProveedor`, `telefono`, `nombreProducto`, `productoStock`, `precioProducto`) VALUES
-(1, 'Proveedor 1', 2147483647, 1, 100, 90),
+(1, 'Jorge Caseros', 2465821035, 5, 250, 25),
 (2, 'Proveedor 2', 2147483647, 2, 80, 180),
 (3, 'Proveedor 3', 2147483647, 3, 60, 130),
 (4, 'Proveedor 4', 2147483647, 4, 70, 220),
@@ -157,7 +158,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `produccion`
@@ -169,7 +170,7 @@ ALTER TABLE `produccion`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
