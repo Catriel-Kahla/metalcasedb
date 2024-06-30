@@ -10,6 +10,7 @@ public class GestionProductos {
     private static final String SELECT_PRODUCTOS = "SELECT * FROM producto";
     private static final String DELETE_PRODUCTO = "DELETE FROM producto WHERE id = ?";
 
+    // Método para mostrar el menú de gestión de productos
     public static void menuGestionProductos(Scanner scanner, Connection connection) {
         int option;
         do {
@@ -45,11 +46,12 @@ public class GestionProductos {
                 default:
                     System.out.println("Opción no válida. Inténtalo de nuevo.");
             }
-        } while (option != 6);
+        } while (option != 6); // Repetir el menú mientras la opción no sea 6 (Volver al Menú Principal)
     }
 
+    // Método para registrar un nuevo producto
     private static void registrarProducto(Scanner scanner, Connection connection) {
-        scanner.nextLine();
+        scanner.nextLine(); // Consumir la nueva línea
         System.out.print("Nombre del Producto: ");
         String nombre = scanner.nextLine();
         System.out.print("Descripción del Producto: ");
@@ -65,7 +67,7 @@ public class GestionProductos {
             statement.setString(2, descripcion);
             statement.setInt(3, precio);
             statement.setInt(4, stock);
-            int rowsInserted = statement.executeUpdate();
+            int rowsInserted = statement.executeUpdate(); // Ejecutar la inserción
             if (rowsInserted > 0) {
                 System.out.println("Producto registrado con éxito.");
             }
@@ -74,14 +76,15 @@ public class GestionProductos {
         }
     }
 
+    // Método para registrar una entrada de producto en el inventario
     private static void registrarEntradaProducto(Scanner scanner, Connection connection) {
-        listarProductos(connection);
+        listarProductos(connection); // Mostrar la lista de productos disponible
         System.out.print("ID del Producto: ");
         int id = scanner.nextInt();
         System.out.print("Cantidad a ingresar: ");
         int cantidad = scanner.nextInt();
 
-        Producto producto = Producto.obtenerProductoPorId(connection, id); // Obtener producto desde la base de datos
+        Producto producto = Producto.obtenerProductoPorId(connection, id); // Obtener el producto desde la base de datos
 
         if (producto == null) {
             System.out.println("Producto no encontrado.");
@@ -92,28 +95,35 @@ public class GestionProductos {
         System.out.println("Entrada de producto registrada con éxito.");
     }
 
+    // Método para registrar una salida de producto del inventario
     private static void registrarSalidaProducto(Scanner scanner, Connection connection) {
-        listarProductos(connection);
+        listarProductos(connection); // Mostrar la lista de productos disponible
         System.out.print("ID del Producto: ");
         int id = scanner.nextInt();
         System.out.print("Cantidad a salir: ");
         int cantidad = scanner.nextInt();
 
-        Producto producto = Producto.obtenerProductoPorId(connection, id); // Obtener producto desde la base de datos
+        Producto producto = Producto.obtenerProductoPorId(connection, id); // Obtener el producto desde la base de datos
 
         if (producto == null) {
             System.out.println("Producto no encontrado.");
             return;
         }
 
-        producto.reducirStock(connection, cantidad); // Reducir stock del producto en la base de datos
-        System.out.println("Salida de producto registrada con éxito.");
+        // Verificar si hay suficiente stock para la salida solicitada
+        if (cantidad <= producto.obtenerStock(connection, id) && producto.obtenerStock(connection, id) != 0) {
+            producto.reducirStock(connection, cantidad); // Reducir stock del producto en la base de datos
+            System.out.println("Salida de producto registrada con éxito.");
+        } else {
+            System.out.println("No hay stock suficiente para retirar");
+        }
     }
 
+    // Método para listar todos los productos en la base de datos
     public static void listarProductos(Connection connection) {
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT_PRODUCTOS);
-            ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery(); // Ejecutar la consulta
             System.out.println("\n=== Lista de Productos ===");
             while (resultSet.next()) {
                 System.out.println("ID: " + resultSet.getInt("id") +
@@ -127,15 +137,16 @@ public class GestionProductos {
         }
     }
 
+    // Método para eliminar un producto de la base de datos
     private static void eliminarProducto(Scanner scanner, Connection connection) {
-        listarProductos(connection);
+        listarProductos(connection); // Mostrar la lista de productos disponible
         System.out.print("ID del Producto a eliminar: ");
         int id = scanner.nextInt();
 
         try {
             PreparedStatement statement = connection.prepareStatement(DELETE_PRODUCTO);
             statement.setInt(1, id);
-            int rowsDeleted = statement.executeUpdate();
+            int rowsDeleted = statement.executeUpdate(); // Ejecutar la eliminación
             if (rowsDeleted > 0) {
                 System.out.println("Producto eliminado con éxito.");
             } else {
